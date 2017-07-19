@@ -37,6 +37,7 @@ export class AppComponent {
   }
 
   public model: any = {};
+    public locationList = new Array();
   public markers = [
     {
       lat: Number(51.673858),
@@ -105,17 +106,32 @@ export class AppComponent {
     // lat: $event.coords.lat,
     // lng: $event.coords.lng
     if ($event) {
-      this.model.Latitude = $event.coords.lat;
-      this.model.Longitude = $event.coords.lng;
 
-      this.map.location.latitude = $event.coords.lat;
-      this.map.location.longitude = $event.coords.lng;
+
+
+           let lat = $event.coords.lat;
+          let lng = $event.coords.lng;
+
+      this.model.Latitude = lat;
+      this.model.Longitude =lng;
+
+      this.map.location.latitude = lat;
+      this.map.location.longitude =lng;
 
 
       this.getAddressByLatLong($event.coords.lat, $event.coords.lng).subscribe(response => {
         if (response && response.status == "OK") {
-          this.model.AddressLine = response.results[0].formatted_address;
+
+          let address = response.results[0].formatted_address;
+          this.model.AddressLine = address;
           this.model.Name = '';
+
+           this.locationList.push({
+
+                AddressLine: address,
+                Latitude: lat,
+                Longitude: lng
+              });
         }
       }, error => { });
 

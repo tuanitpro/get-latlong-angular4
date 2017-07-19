@@ -1,34 +1,65 @@
 <div class="main-form">
-  <h3>Get Lat Long from Address</h3>
-  <form class="form-horizontal form-label-left" name="form" (ngSubmit)="f.form.valid" #f="ngForm" novalidate>
-    <div class="item form-group">
-      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Name"> {{resources.name}}  
-                      </label>
-      <input type="text" id="Name" class="form-control col-md-7 col-xs-12" name="Name" placeholder="{{resources.name}}" [(ngModel)]="model.Name"
-        #Name="ngModel" (blur)="getLatLongByName()" />
-      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="AddressLine"> {{resources.address}}
-                      </label>
-      <input type="text" id="AddressLine" class="form-control col-md-7 col-xs-12" name="AddressLine" placeholder="{{resources.address}}"
-        [(ngModel)]="model.AddressLine" #AddressLine="ngModel" (blur)="getLatLongByAddress()" />
-    </div>
-    <div class="item form-group">
-      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Latitude"> {{resources.latitude}}  
-                      </label>
-      <div class="col-md-3 col-sm-12 col-xs-12">
-        <input id="Latitude" class="form-control col-md-7 col-xs-12" name="Latitude" placeholder="{{resources.latitude}}" type="text"
-          [(ngModel)]="model.Latitude" #Latitude="ngModel" />
-      </div>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:50%; text-align:left">
+          <h3>Get Lat Long from Address</h3>
+        </th>
+        <th style="width:50%; text-align:left">
+          <h3>Location List</h3>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td  style="width:50%">
 
-      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Longitude"> {{resources.longitude}}  
+          <form class="form-horizontal form-label-left" name="form" (ngSubmit)="f.form.valid" #f="ngForm" novalidate>
+            <div class="item form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Name"> {{resources.name}}  
                       </label>
-      <div class="col-md-3 col-sm-12 col-xs-12">
-        <input id="Longitude" class="form-control col-md-7 col-xs-12" name="Longitude" placeholder="{{resources.longitude}}" type="text"
-          [(ngModel)]="model.Longitude" #Longitude="ngModel" />
+              <input type="text" id="Name" class="form-control col-md-7 col-xs-12" name="Name" placeholder="{{resources.name}}" [(ngModel)]="model.Name"
+                #Name="ngModel" (blur)="getLatLongByName()" />
+              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="AddressLine"> {{resources.address}}
+                      </label>
+              <input type="text" id="AddressLine" class="form-control col-md-7 col-xs-12" name="AddressLine" placeholder="{{resources.address}}"
+                [(ngModel)]="model.AddressLine" #AddressLine="ngModel" (blur)="getLatLongByAddress()" />
+            </div>
+            <div class="item form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Latitude"> {{resources.latitude}}  
+                      </label>
+              <div class="col-md-3 col-sm-12 col-xs-12">
+                <input id="Latitude" class="form-control col-md-7 col-xs-12" name="Latitude" placeholder="{{resources.latitude}}" type="text"
+                  [(ngModel)]="model.Latitude" #Latitude="ngModel" />
+              </div>
 
-      </div>
+              <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Longitude"> {{resources.longitude}}  
+                      </label>
+              <div class="col-md-3 col-sm-12 col-xs-12">
+                <input id="Longitude" class="form-control col-md-7 col-xs-12" name="Longitude" placeholder="{{resources.longitude}}" type="text"
+                  [(ngModel)]="model.Longitude" #Longitude="ngModel" />
 
-    </div>
-  </form>
+              </div>
+
+            </div>
+          </form>
+
+        </td>
+        <td  style="width:50%">
+          <ul style="height:250px; overflow-y:scroll">
+            <li *ngFor="let m of locationList; let i = index">
+              {{m.AddressLine}} ({{m.Latitude}}, {{m.Longitude}})
+            </li>
+          </ul>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+
+
+
+
 </div>
 
 <agm-map [latitude]="map.location.latitude" [longitude]="map.location.longitude" [zoom]="16" [disableDefaultUI]="false" [zoomControl]="false"
@@ -40,13 +71,21 @@
         <b>{{model.Name}}</b><br/> {{model.AddressLine}}
       </div>
 
-       
+
     </agm-info-window>
   </agm-marker>
- <agm-marker *ngFor="let m of markers;" [latitude]="m.lat" [longitude]="m.lng">
-    <agm-info-window>{{m.label}}</agm-info-window>
- </agm-marker>
-   
+  <agm-marker *ngFor="let m of locationList; let i = index" [latitude]="m.Latitude" [longitude]="m.Longitude" [markerDraggable]="false">
+    <agm-info-window>
+      <div class="marker-icon"> <img src="http://icons.iconarchive.com/icons/alecive/flatwoken/256/Apps-Google-Maps-icon.png" width="160" /> <br/></div>
+      <div class="marker-info">
+        {{m.AddressLine}}
+      </div>
+
+
+    </agm-info-window>
+
+  </agm-marker>
+
 </agm-map>
 
 

@@ -5,13 +5,23 @@ label{
     font-family: Arial, Helvetica, sans-serif;
 }
 .main-form{
-    max-height: 300px;
+    max-height: 350px;
    background-color: #f2f1e3;
     border: 1px solid #d3ceb4;
-    padding: 10px;
+    padding: 10px;    
     
     
 }
+table {
+    width: 100%;
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+ table thead td{
+     width: 50%;
+     float: left;
+ }
  .marker-icon{
      width: 165px;
      float: left;
@@ -31,7 +41,7 @@ input, select, textarea {
     font-size: 100%;
     line-height: normal;
     max-width: 100%;
-    width: 30%;
+    width: 90%;
 }
 .form-control {
     display: block;
@@ -54,7 +64,7 @@ input, select, textarea {
 }
 agm-map {
   height: 550px;
-  bottom: 50px;
+  
 }
 .footer{
   
