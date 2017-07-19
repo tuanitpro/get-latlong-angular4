@@ -12,7 +12,13 @@ label{
     
     
 }
- 
+ .marker-icon{
+     width: 165px;
+     float: left;
+ }
+    .marker-info{
+        float: left;
+    }
 input, select, textarea {
     color: inherit;
     font: inherit;

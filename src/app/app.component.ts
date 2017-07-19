@@ -4,16 +4,18 @@ import { Http, HttpModule, Headers, Response, RequestOptions, RequestMethod } fr
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-
+ 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
+
 export class AppComponent {
   title = 'app';
   public resources: any = {
-    name: 'Name',
+    name: 'Location Name',
     address: 'Address',
     location: 'Location',
     latitude: 'Latitude',
@@ -35,6 +37,26 @@ export class AppComponent {
   }
 
   public model: any = {};
+  public markers = [
+    {
+      lat: Number(51.673858),
+      lng: Number( 7.815982),
+      label: 'A',
+      draggable: true
+    },
+    {
+      lat: 51.373858,
+      lng: 7.215982,
+      label: 'B',
+      draggable: false
+    },
+    {
+      lat: 51.723858,
+      lng: 7.895982,
+      label: 'C',
+      draggable: true
+    }
+  ]
   constructor(private http: Http) { }
 
   private getLatLongByLocation(name: String): Observable<any> {
@@ -44,7 +66,14 @@ export class AppComponent {
       var data = response.json();
       return data;
     });
+  }
 
+  private getAddressByLatLong(lat: number, long: number): Observable<any> {
+    let url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + long + '&key=AIzaSyD9kUn8_TBheTkprqbt1vWg0wB19dfph10';
+    return this.http.get(url).map((response: Response | any) => {
+      var data = response.json();
+      return data;
+    });
   }
   getLatLongByName() {
     if (this.model.Name) {
@@ -71,4 +100,26 @@ export class AppComponent {
       }, error => { });
     }
   }
+  mapClicked($event) {
+
+    // lat: $event.coords.lat,
+    // lng: $event.coords.lng
+    if ($event) {
+      this.model.Latitude = $event.coords.lat;
+      this.model.Longitude = $event.coords.lng;
+
+      this.map.location.latitude = $event.coords.lat;
+      this.map.location.longitude = $event.coords.lng;
+
+
+      this.getAddressByLatLong($event.coords.lat, $event.coords.lng).subscribe(response => {
+        if (response && response.status == "OK") {
+          this.model.AddressLine = response.results[0].formatted_address;
+          this.model.Name = '';
+        }
+      }, error => { });
+
+    }
+  }
 }
+

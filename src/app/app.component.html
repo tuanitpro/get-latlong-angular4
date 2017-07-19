@@ -1,61 +1,55 @@
 <div class="main-form">
-<h3>Get Lat Long from Address</h3>
- <form class="form-horizontal form-label-left" name="form" (ngSubmit)="f.form.valid" #f="ngForm" novalidate>
-
-          <div class="item form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Name"> {{resources.name}}  
+  <h3>Get Lat Long from Address</h3>
+  <form class="form-horizontal form-label-left" name="form" (ngSubmit)="f.form.valid" #f="ngForm" novalidate>
+    <div class="item form-group">
+      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Name"> {{resources.name}}  
                       </label>
-           
-
-
-              <input type="text" id="Name" class="form-control col-md-7 col-xs-12" name="Name" placeholder="{{resources.name}}"  
-                [(ngModel)]="model.Name" #Name="ngModel"  (change)="getLatLongByName()"/>
-               
-            
-
-             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="AddressLine"> {{resources.address}}
+      <input type="text" id="Name" class="form-control col-md-7 col-xs-12" name="Name" placeholder="{{resources.name}}" [(ngModel)]="model.Name"
+        #Name="ngModel" (blur)="getLatLongByName()" />
+      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="AddressLine"> {{resources.address}}
                       </label>
-           
-
-
-              <input type="text" id="AddressLine" class="form-control col-md-7 col-xs-12" name="AddressLine" placeholder="{{resources.address}}"
-               [(ngModel)]="model.AddressLine" #AddressLine="ngModel" (change)="getLatLongByAddress()" />
-             
-
-          
-          </div>
-
-
-
-          
-
-          <div class="item form-group">
-                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Latitude"> {{resources.latitude}}  
+      <input type="text" id="AddressLine" class="form-control col-md-7 col-xs-12" name="AddressLine" placeholder="{{resources.address}}"
+        [(ngModel)]="model.AddressLine" #AddressLine="ngModel" (blur)="getLatLongByAddress()" />
+    </div>
+    <div class="item form-group">
+      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Latitude"> {{resources.latitude}}  
                       </label>
-                  <div class="col-md-3 col-sm-12 col-xs-12">
-                    <input id="Latitude" class="form-control col-md-7 col-xs-12" name="Latitude" placeholder="{{resources.latitude}}" type="text"
-                      [(ngModel)]="model.Latitude" #Latitude="ngModel" />
-                  </div>
-                    
-                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Longitude"> {{resources.longitude}}  
+      <div class="col-md-3 col-sm-12 col-xs-12">
+        <input id="Latitude" class="form-control col-md-7 col-xs-12" name="Latitude" placeholder="{{resources.latitude}}" type="text"
+          [(ngModel)]="model.Latitude" #Latitude="ngModel" />
+      </div>
+
+      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Longitude"> {{resources.longitude}}  
                       </label>
-                  <div class="col-md-3 col-sm-12 col-xs-12">
-                    <input id="Longitude" class="form-control col-md-7 col-xs-12" name="Longitude" placeholder="{{resources.longitude}}" type="text"
-                      [(ngModel)]="model.Longitude" #Longitude="ngModel" />
+      <div class="col-md-3 col-sm-12 col-xs-12">
+        <input id="Longitude" class="form-control col-md-7 col-xs-12" name="Longitude" placeholder="{{resources.longitude}}" type="text"
+          [(ngModel)]="model.Longitude" #Longitude="ngModel" />
 
-                  </div>
+      </div>
 
-                </div>
-          
-          
-         
-           
-        </form>
+    </div>
+  </form>
 </div>
 
-<agm-map [latitude]="map.location.latitude" [longitude]="map.location.longitude" [zoom]="16">
-  <agm-marker [latitude]="map.location.latitude" [longitude]="map.location.longitude"></agm-marker>
+<agm-map [latitude]="map.location.latitude" [longitude]="map.location.longitude" [zoom]="16" [disableDefaultUI]="false" [zoomControl]="false"
+  (mapClick)="mapClicked($event)">
+  <agm-marker [latitude]="map.location.latitude" [longitude]="map.location.longitude">
+    <agm-info-window>
+      <div class="marker-icon"> <img src="http://icons.iconarchive.com/icons/alecive/flatwoken/256/Apps-Google-Maps-icon.png" width="160" /> <br/></div>
+      <div class="marker-info">
+        <b>{{model.Name}}</b><br/> {{model.AddressLine}}
+      </div>
+
+       
+    </agm-info-window>
+  </agm-marker>
+ <agm-marker *ngFor="let m of markers;" [latitude]="m.lat" [longitude]="m.lng">
+    <agm-info-window>{{m.label}}</agm-info-window>
+ </agm-marker>
+   
 </agm-map>
+
+
 
 <div class="footer">
   <a href="http://tuanitpro.com">
