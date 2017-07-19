@@ -1,18 +1,18 @@
 <div class="main-form">
-  <table>
+  <table cellpadding="0">
     <thead>
       <tr>
         <th style="width:50%; text-align:left">
           <h3>Get Lat Long from Address</h3>
         </th>
         <th style="width:50%; text-align:left">
-          <h3>Location List</h3>
+          <h3>Location List ({{locationList.length}})</h3>
         </th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td  style="width:50%">
+        <td style="width:50%">
 
           <form class="form-horizontal form-label-left" name="form" (ngSubmit)="f.form.valid" #f="ngForm" novalidate>
             <div class="item form-group">
@@ -45,7 +45,7 @@
           </form>
 
         </td>
-        <td  style="width:50%">
+        <td style="width:50%">
           <ul style="height:250px; overflow-y:scroll">
             <li *ngFor="let m of locationList; let i = index">
               {{m.AddressLine}} ({{m.Latitude}}, {{m.Longitude}})
@@ -55,11 +55,6 @@
       </tr>
     </tbody>
   </table>
-
-
-
-
-
 </div>
 
 <agm-map [latitude]="map.location.latitude" [longitude]="map.location.longitude" [zoom]="16" [disableDefaultUI]="false" [zoomControl]="false"
@@ -70,8 +65,6 @@
       <div class="marker-info">
         <b>{{model.Name}}</b><br/> {{model.AddressLine}}
       </div>
-
-
     </agm-info-window>
   </agm-marker>
   <agm-marker *ngFor="let m of locationList; let i = index" [latitude]="m.Latitude" [longitude]="m.Longitude" [markerDraggable]="false">
@@ -80,12 +73,8 @@
       <div class="marker-info">
         {{m.AddressLine}}
       </div>
-
-
     </agm-info-window>
-
   </agm-marker>
-
 </agm-map>
 
 

@@ -4,7 +4,7 @@ import { Http, HttpModule, Headers, Response, RequestOptions, RequestMethod } fr
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
- 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -36,10 +36,26 @@ export class AppComponent {
     }
   }
 
-  public model: any = {};
-    public locationList = new Array();
- 
-  constructor(private http: Http) { }
+  public model: any = {
+    Name: 'Chợ Bến Thành',
+    AddressLine: "Đường Lê Lợi, Bến Thành, Quận 1, Hồ Chí Minh, Vietnam",
+    Latitude: 10.7728067,
+    Longitude: 106.6997623
+  };
+  public locationList = new Array();
+
+  constructor(private http: Http) {
+    this.locationList.push({
+      AddressLine: "Đường Lê Lợi, Bến Thành, Quận 1, Hồ Chí Minh, Vietnam",
+      Latitude: 10.7728067,
+      Longitude: 106.6997623
+    });
+    this.locationList.push({
+      AddressLine: "1, Công xã Paris, Bến Nghé, Quận 1, Hồ Chí Minh, Vietnam",
+      Latitude: 10.7793131,
+      Longitude: 106.6990862
+    });
+  }
 
   private getLatLongByLocation(name: String): Observable<any> {
 
@@ -90,14 +106,14 @@ export class AppComponent {
 
 
 
-           let lat = $event.coords.lat;
-          let lng = $event.coords.lng;
+      let lat = $event.coords.lat;
+      let lng = $event.coords.lng;
 
       this.model.Latitude = lat;
-      this.model.Longitude =lng;
+      this.model.Longitude = lng;
 
-      this.map.location.latitude = lat;
-      this.map.location.longitude =lng;
+      // this.map.location.latitude = lat;
+      //this.map.location.longitude =lng;
 
 
       this.getAddressByLatLong($event.coords.lat, $event.coords.lng).subscribe(response => {
@@ -107,12 +123,12 @@ export class AppComponent {
           this.model.AddressLine = address;
           this.model.Name = '';
 
-           this.locationList.push({
+          this.locationList.push({
 
-                AddressLine: address,
-                Latitude: lat,
-                Longitude: lng
-              });
+            AddressLine: address,
+            Latitude: lat,
+            Longitude: lng
+          });
         }
       }, error => { });
 
