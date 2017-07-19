@@ -1,0 +1,66 @@
+<div class="main-form">
+ <form class="form-horizontal form-label-left" name="form" (ngSubmit)="f.form.valid" #f="ngForm" novalidate>
+
+          <div class="item form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Name"> {{resources.name}}  
+                      </label>
+            <div class="col-md-9 col-sm-12 col-xs-12">
+
+
+              <input type="text" id="Name" class="form-control col-md-7 col-xs-12" name="Name" placeholder="{{resources.name}}"  
+                [(ngModel)]="model.Name" #Name="ngModel"  (change)="getLatLongByName()"/>
+
+               
+
+            </div>
+          </div>
+
+
+
+          <div class="item form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="AddressLine"> {{resources.address}}
+                      </label>
+            <div class="col-md-9 col-sm-12 col-xs-12">
+
+
+              <input type="text" id="AddressLine" class="form-control col-md-7 col-xs-12" name="AddressLine" placeholder="{{resources.address}}"
+               [(ngModel)]="model.AddressLine" #AddressLine="ngModel" (change)="getLatLongByAddress()" />
+             
+
+            </div>
+          </div>
+
+
+          <div class="item form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Latitude"> {{resources.latitude}}  
+                      </label>
+                  <div class="col-md-3 col-sm-12 col-xs-12">
+                    <input id="Latitude" class="form-control col-md-7 col-xs-12" name="Latitude" placeholder="{{resources.latitude}}" type="text"
+                      [(ngModel)]="model.Latitude" #Latitude="ngModel" />
+                  </div>
+                    
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Longitude"> {{resources.longitude}}  
+                      </label>
+                  <div class="col-md-3 col-sm-12 col-xs-12">
+                    <input id="Longitude" class="form-control col-md-7 col-xs-12" name="Longitude" placeholder="{{resources.longitude}}" type="text"
+                      [(ngModel)]="model.Longitude" #Longitude="ngModel" />
+
+                  </div>
+
+                </div>
+          
+          
+         
+           
+        </form>
+</div>
+
+<agm-map [latitude]="map.location.latitude" [longitude]="map.location.longitude" [zoom]="16">
+  <agm-marker [latitude]="map.location.latitude" [longitude]="map.location.longitude"></agm-marker>
+</agm-map>
+
+<div class="footer">
+  <a href="http://tuanitpro.com">
+  Lê Thanh Tuấn. Make with love code! 
+  </a>
+</div>
