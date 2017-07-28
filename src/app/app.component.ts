@@ -5,6 +5,10 @@ import { Http, HttpModule, Headers, Response, RequestOptions, RequestMethod } fr
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
+import { GoogleMapsAPIWrapper } from '@agm/core';
+import { MapsAPILoader } from '@agm/core';
+declare var google: any;
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -38,7 +42,7 @@ export class AppComponent {
 
   public model: any = {
     Name: 'Chợ Bến Thành',
-    AddressLine: "Đường Lê Lợi, Bến Thành, Quận 1, Hồ Chí Minh, Vietnam",
+    AddressLine: 'Đường Lê Lợi, Bến Thành, Quận 1, Hồ Chí Minh, Vietnam',
     Latitude: 10.7728067,
     Longitude: 106.6997623
   };
@@ -46,42 +50,61 @@ export class AppComponent {
 
   constructor(private http: Http) {
     this.locationList.push({
-      AddressLine: "Đường Lê Lợi, Bến Thành, Quận 1, Hồ Chí Minh, Vietnam",
+      AddressLine: 'Đường Lê Lợi, Bến Thành, Quận 1, Hồ Chí Minh, Vietnam',
       Latitude: 10.7728067,
       Longitude: 106.6997623
     });
     this.locationList.push({
-      AddressLine: "1, Công xã Paris, Bến Nghé, Quận 1, Hồ Chí Minh, Vietnam",
+      AddressLine: '1, Công xã Paris, Bến Nghé, Quận 1, Hồ Chí Minh, Vietnam',
       Latitude: 10.7793131,
       Longitude: 106.6990862
     });
   }
-
-  private getLatLongByLocation(name: String): Observable<any> {
-
-    let url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + name + '&key=AIzaSyD9kUn8_TBheTkprqbt1vWg0wB19dfph10';
-    return this.http.get(url).map((response: Response | any) => {
-      var data = response.json();
-      return data;
-    });
+  getLatLongByLocation(address: string) {
+    const geocoder = new google.maps.Geocoder();
+    return Observable.create(observer => {
+      geocoder.geocode({ 'address': address }, function (results, status) {
+        if (status === google.maps.GeocoderStatus.OK) {
+          // observer.next(results[0].geometry.location);
+          observer.next(results[0]);
+          observer.complete();
+        } else {
+          console.log('Error - ', results, ' & Status - ', status);
+          observer.next({});
+          observer.complete();
+        }
+      });
+    })
   }
 
+
   private getAddressByLatLong(lat: number, long: number): Observable<any> {
-    let url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + long + '&key=AIzaSyD9kUn8_TBheTkprqbt1vWg0wB19dfph10';
-    return this.http.get(url).map((response: Response | any) => {
-      var data = response.json();
-      return data;
-    });
+    const geocoder = new google.maps.Geocoder();
+    const latlng = { lat: lat, lng: long };
+    return Observable.create(observer => {
+      geocoder.geocode({ 'location': latlng }, function (results, status) {
+        if (status === google.maps.GeocoderStatus.OK) {
+          // observer.next(results[0].geometry.location);
+          observer.next(results[0]);
+          observer.complete();
+        } else {
+          console.log('Error - ', results, ' & Status - ', status);
+          observer.next({});
+          observer.complete();
+        }
+      });
+    })
   }
   getLatLongByName() {
     if (this.model.Name) {
       this.getLatLongByLocation(this.model.Name).subscribe(response => {
-        if (response && response.status == "OK") {
-          this.map.location.latitude = response.results[0].geometry.location.lat;
-          this.map.location.longitude = response.results[0].geometry.location.lng;
-          this.model.AddressLine = response.results[0].formatted_address;
-          this.model.Latitude = response.results[0].geometry.location.lat;
-          this.model.Longitude = response.results[0].geometry.location.lng;
+        console.log(response.geometry.location);
+        if (response) {
+          this.map.location.latitude = response.geometry.location.lat();
+          this.map.location.longitude = response.geometry.location.lng();
+          this.model.AddressLine = response.formatted_address;
+          this.model.Latitude = response.geometry.location.lat();
+          this.model.Longitude = response.geometry.location.lng();
         }
       }, error => { });
     }
@@ -89,11 +112,11 @@ export class AppComponent {
   getLatLongByAddress() {
     if (this.model.AddressLine) {
       this.getLatLongByLocation(this.model.AddressLine).subscribe(response => {
-        if (response && response.status == "OK") {
-          this.map.location.latitude = response.results[0].geometry.location.lat;
-          this.map.location.longitude = response.results[0].geometry.location.lng;
-          this.model.Latitude = response.results[0].geometry.location.lat;
-          this.model.Longitude = response.results[0].geometry.location.lng;
+        if (response) {
+          this.map.location.latitude = response.geometry.location.lat();
+          this.map.location.longitude = response.geometry.location.lng();
+          this.model.Latitude = response.geometry.location.lat();
+          this.model.Longitude = response.geometry.location.lng();
         }
       }, error => { });
     }
@@ -103,28 +126,21 @@ export class AppComponent {
     // lat: $event.coords.lat,
     // lng: $event.coords.lng
     if ($event) {
-
-
-
-      let lat = $event.coords.lat;
-      let lng = $event.coords.lng;
+      const lat = $event.coords.lat;
+      const lng = $event.coords.lng;
 
       this.model.Latitude = lat;
       this.model.Longitude = lng;
 
       // this.map.location.latitude = lat;
-      //this.map.location.longitude =lng;
-
-
+      // this.map.location.longitude =lng;
       this.getAddressByLatLong($event.coords.lat, $event.coords.lng).subscribe(response => {
-        if (response && response.status == "OK") {
+        if (response) {
 
-          let address = response.results[0].formatted_address;
+          const address = response.formatted_address;
           this.model.AddressLine = address;
           this.model.Name = '';
-
           this.locationList.push({
-
             AddressLine: address,
             Latitude: lat,
             Longitude: lng
